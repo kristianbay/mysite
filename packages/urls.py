@@ -8,4 +8,6 @@ urlpatterns = [
     url(r'^details/(?P<package_version_id>[0-9]+)$', views.details, name='details'),
     url(r'^download_package/(?P<package_version_id>[0-9]+)$', views.download_package, name='download_package'),
     url(r'^download_manual/(?P<package_version_id>[0-9]+)$', views.download_manual, name='download_manual'),
+    url(r'^register/$', views.register),
+    url(r'^register/success/$', views.register_success),
 ]

@@ -1,8 +1,12 @@
 import os
 
-from django.shortcuts import render, HttpResponse
-from django.http import HttpResponseNotFound
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+
+from django.shortcuts import render, render_to_response, HttpResponse
+from django.http import HttpResponseNotFound, HttpResponseRedirect
+from django.template import RequestContext
+from django.views.decorators.csrf import csrf_protect
 
 from django.utils.encoding import smart_str
 from django.utils import html
@@ -15,19 +19,22 @@ from .models import CustomerProduct
 from .models import Product
 from .models import ProductPackage
 
+from .forms import *
+
 # Create your views here.
 @login_required(login_url='/login/')
 def index(request):
-    #package_list = Package.objects.order_by('name')
-    customer = Customer.objects.get(customeruser__user=request.user.id)
-    product_list = Product.objects.filter(customerproduct__customer=customer)
-    #print product_list
-    package_list = Package.objects.filter(productpackage__product__in=product_list).order_by('name')
-    #print package_list
-    package_ver_list = []
-    for package in package_list:
-        package_ver_list.append(PackageVersion.objects.filter(package=package).latest('release_date'))
-    package_ver_list = zip(package_list, package_ver_list)
+    try:
+        customer = Customer.objects.get(customeruser__user=request.user.id)
+        print customer
+        product_list = Product.objects.filter(customerproduct__customer=customer)
+        package_list = Package.objects.filter(productpackage__product__in=product_list).order_by('name')
+        package_ver_list = []
+        for package in package_list:
+            package_ver_list.append(PackageVersion.objects.filter(package=package).latest('release_date'))
+        package_ver_list = zip(package_list, package_ver_list)
+    except:
+        package_ver_list = []
     context = {'package_list': package_ver_list}
     return render(request, 'packages/index.html', context)
 
@@ -76,3 +83,23 @@ def download_manual(request, package_version_id):
     package_version = PackageVersion.objects.get(id=package_version_id)
     path_to_file = os.path.join(package_version.package.path, package_version.version, package_version.manual_file)
     return download_file(path_to_file)
+
+@csrf_protect
+def register(request):
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            user = User.objects.create_user(
+            username=form.cleaned_data['username'],
+            password=form.cleaned_data['password1'],
+            email=form.cleaned_data['email']
+            )
+            return HttpResponseRedirect('/register/success/')
+    else:
+        form = RegistrationForm()
+    variables = RequestContext(request, {'form': form})
+ 
+    return render_to_response('registration/register.html', variables)
+ 
+def register_success(request):
+    return render_to_response('registration/success.html')
