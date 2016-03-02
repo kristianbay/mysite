@@ -1,0 +1,27 @@
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'packages/style.css' %}" />
+
+<html>
+  <head>
+        <title>{% block title %}Home {% endblock title %} | GomSpace Download</title>
+        {% block head_favicon %}
+            <link rel="icon" type="image/png" href="{% static 'packages/img/favicon.ico' %}">
+        {% endblock head_favicon %}
+  </head>
+
+  <body>
+    <div align="left"><img src="{% static 'packages/img/glogo.png' %}" /></div>
+    <div align="right">
+      Username {{ user }}&nbsp;
+      {% if user.is_anonymous %}
+      <a href="{% url 'django.contrib.auth.views.login' %}">login</a>
+      {% else %}
+      <a href="{% url 'django.contrib.auth.views.logout' %}">logout</a>
+      {% endif %}
+      &nbsp;
+    </div>
+    {% block content %}
+    {% endblock %}
+  </body>
+</html>

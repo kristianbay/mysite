@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1><a href="/packages/versions/{{ package.id }}">{{ package.name }}</a>, version {{ package_version.version }}</h1>
+
+<hr>
+
+{% if package %}
+    <table>
+        <tr><td>Name</td><td>{{ package.name }}</td></tr>
+        <tr><td>Version</td><td>{{ package_version.version }}</td></tr>
+        <tr><td>Release Date</td><td>{{ package_version.release_date }}</td></tr>
+        <tr>
+        	<td>Actions</td>
+        	<td>
+        		<a href="/packages/download_package/{{ package_version.id }}">Download package</a>
+        		&nbsp;
+				<a href="/packages/download_manual/{{ package_version.id }}">Download manual</a>
+        	</td>
+        </tr>
+    </table>
+    <h3>Changelog</h3>
+
+    <div style="margin-left: 10px;">
+    {% autoescape on %}
+        {{ changelog|linebreaks }}
+    {% endautoescape %}
+    </div>
+{% else %}
+    <p>Package not available.</p>
+{% endif %}
+
+{% endblock %}

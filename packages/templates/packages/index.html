@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>List of available packages</h1>
+<hr>
+{% if package_list %}
+    <table>
+    <tr>
+        <th>Name</a></th>
+        <th>Latest version</a></th>
+        <th>Release date</th>
+    </tr>
+    {% for package, package_ver in package_list %}
+        <tr>
+            <td><a href="/packages/versions/{{ package.id }}">{{ package.name }}</a></td>
+            <td>{{ package_ver.version }}</td>
+            <td>{{ package_ver.release_date }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+{% else %}
+    <p>No packages are available.</p>
+{% endif %}
+
+{% endblock %}

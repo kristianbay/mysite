@@ -1,0 +1,35 @@
+*.py[cod]
+
+# C extensions
+*.so
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib64
+__pycache__
+_PyInline*
+
+# Installer logs
+pip-log.txt
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+
+.waf*
+.lock*
+*.bin
+*.map
+
+*.*~
