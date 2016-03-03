@@ -5,12 +5,12 @@ from django.utils.translation import ugettext_lazy as _
  
 class RegistrationForm(forms.Form):
  
-    username = forms.RegexField(regex=r'^\w+$', widget=forms.TextInput(attrs=dict(required=True, max_length=30)), label=_("Username"), error_messages={ 'invalid': _("This value must contain only letters, numbers and underscores.") })
-    email = forms.EmailField(widget=forms.TextInput(attrs=dict(required=True, max_length=30)), label=_("Email address"))
-    password1 = forms.CharField(widget=forms.PasswordInput(attrs=dict(required=True, max_length=30, render_value=False)), label=_("Password"))
-    password2 = forms.CharField(widget=forms.PasswordInput(attrs=dict(required=True, max_length=30, render_value=False)), label=_("Password (again)"))
-    oderno = forms.CharField(widget=forms.TextInput(attrs=dict(required=False, max_length=30, render_value=True)), label=_("Order Number (optional)"))
-    uid = forms.CharField(widget=forms.TextInput(attrs=dict(required=False, max_length=16, render_value=True)), label=_("Product UID (optional)"))
+    username = forms.RegexField(regex=r'^\w+$', widget=forms.TextInput(attrs=dict(max_length=30)), label=_("Username"), error_messages={ 'invalid': _("This value must contain only letters, numbers and underscores.") })
+    email = forms.EmailField(widget=forms.TextInput(attrs=dict(max_length=30)), label=_("Email address"))
+    password1 = forms.CharField(widget=forms.PasswordInput(attrs=dict(max_length=30, render_value=False)), label=_("Password"))
+    password2 = forms.CharField(widget=forms.PasswordInput(attrs=dict(max_length=30, render_value=False)), label=_("Password (again)"))
+    oderno = forms.CharField(widget=forms.TextInput(attrs=dict(max_length=30, render_value=True)), label=_("Order Number (optional)"), required=False)
+    uid = forms.CharField(widget=forms.TextInput(attrs=dict(max_length=16, render_value=True)), label=_("Product UID (optional)"), required=False)
  
     def clean_username(self):
         try:

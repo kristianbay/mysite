@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
+from django.core.exceptions import ObjectDoesNotExist
 from packages.models import Product
 from packages.models import Customer
 from packages.models import CustomerProduct
@@ -27,7 +28,7 @@ class Command(BaseCommand):
                         row['ShortName'] = row['ProductVariant']
                 try:
                     (obj, created) = Product.objects.get_or_create(
-                                product_id=int(row['ProductID']),
+                                inv_product_id=int(row['ProductID']),
                                 variant=row['ProductVariant'],
                                 shortname=row['ShortName'],
                                 )
@@ -49,8 +50,8 @@ class Command(BaseCommand):
             for row in reader:
                 try:
                     (obj, created) = Customer.objects.get_or_create(
-                                customer_id=int(row['CustomerID']),
-                                customer_number=row['CustomerNumber'],
+                                inv_customer_id=int(row['CustomerID']),
+                                inv_customer_number=row['CustomerNumber'],
                                 )
                     if created:
                         self.stdout.write(self.style.SUCCESS('Created %d %s' % (int(row['CustomerID']), row['CustomerNumber'])))
@@ -69,15 +70,19 @@ class Command(BaseCommand):
             reader = csv.DictReader(csvfile)
             for row in reader:
                 try:
+                    customer = Customer.objects.get(inv_customer_id=int(row['CustomerID']))
+                    product = Product.objects.get(inv_product_id=int(row['ProductID']))
+                except ObjectDoesNotExist:
+                    self.stdout.write(self.style.ERROR('Exception: Product or Customer not found - skipping %s' % (str(row))))
+                try:
                     (obj, created) = CustomerProduct.objects.get_or_create(
-                                customer__id=int(row['CustomerID']),
-                                product__id=row['ProductID'],
-                                production_order_id=row['ProductionOrderID'],
+                                customer=customer,
+                                product=product,
+                                inv_production_order_id=row['ProductionOrderID'],
                                 )
                     if created:
-                        self.stdout.write(self.style.SUCCESS('Created %d %s' % (int(row['CustomerID']), row['ProductID'])))
+                        self.stdout.write(self.style.SUCCESS('Created %d %d' % (int(row['CustomerID']), int(row['ProductID']))))
                     else:
-                        #self.stdout.write('Existed %d %s' % (int(row['CustomerID']), row['ProductID']))
                         pass
                 except:
                     self.stdout.write(self.style.ERROR('Exception: Skipping %s' % (str(row))))

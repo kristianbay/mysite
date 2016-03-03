@@ -47,6 +47,7 @@ h4 {
 /* Table Styles */
 table {
     border-collapse: collapse;
+	font-size: 1.1em;
 }
 
 table, th, td {
@@ -79,12 +80,3 @@ a:link, a:visited {
 	color: #80A919;
 }
 
-/*
-form {
-	color: #ACD83E;
-}
-
-label {
-	color:#070B0F;
-}
-*/

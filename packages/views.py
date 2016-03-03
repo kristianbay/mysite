@@ -10,6 +10,7 @@ from django.views.decorators.csrf import csrf_protect
 
 from django.utils.encoding import smart_str
 from django.utils import html
+from django.utils import timezone
 
 from .models import Package
 from .models import PackageVersion
@@ -27,8 +28,8 @@ def index(request):
     try:
         customer = Customer.objects.get(customeruser__user=request.user.id)
         print customer
-        product_list = Product.objects.filter(customerproduct__customer=customer)
-        package_list = Package.objects.filter(productpackage__product__in=product_list).order_by('name')
+        product_list = Product.objects.filter(customerproduct__customer=customer) #.filter(customerproduct__expired_date__lte=timezone.now)
+        package_list = Package.objects.filter(productpackage__product__in=product_list).order_by('name').distinct()
         package_ver_list = []
         for package in package_list:
             package_ver_list.append(PackageVersion.objects.filter(package=package).latest('release_date'))
