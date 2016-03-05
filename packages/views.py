@@ -4,6 +4,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 
 from django.shortcuts import render, render_to_response, HttpResponse
+from django.shortcuts import get_object_or_404
 from django.http import HttpResponseNotFound, HttpResponseRedirect
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_protect
@@ -32,7 +33,7 @@ from .forms import *
 def index(request):
     try:
         customer = Customer.objects.get(customeruser__user=request.user.id)
-        print customer
+        #print customer
         product_list = Product.objects.filter(customerproduct__customer=customer) #.filter(customerproduct__expired_date__lte=timezone.now)
         package_list = Package.objects.filter(productpackage__product__in=product_list).order_by('name').distinct()
         package_ver_list = []
@@ -110,6 +111,21 @@ def register(request):
 def register_success(request):
     return render_to_response('registration/success.html')
 
+from django.views.generic import ListView
+
+class ProductList(ListView):
+    model = Product
+
+class CustomerProductList(ListView):
+
+    template_name = 'packages/customers_by_product.html'
+
+    def get_queryset(self):
+        print "CustomerProductList: get_queryset: %s" % (str(self.args))
+        self.product = get_object_or_404(Product, inv_product_id=self.args[0])
+        return Customer.objects.filter(customerproduct__product=self.product).distinct().order_by('inv_customer_id')
+        #.filter(customerproduct__expired_date__lte=timezone.now)
+    
 class PackageView(generics.ListAPIView):
     """
     Returns a list of all packages.

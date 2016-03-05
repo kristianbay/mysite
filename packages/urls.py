@@ -12,4 +12,6 @@ urlpatterns = [
     url(r'^register/success/$', views.register_success),
     url(r'^api/1.0/packages/$', views.PackageView.as_view(), name='package-list'),
     url(r'^api/1.0/packageversions/$', views.PackageVersionView.as_view(), name='package-version-list'),
+    url(r'^products/$', views.ProductList.as_view()),
+    url(r'^customers/([0-9]+)/$', views.CustomerProductList.as_view()),
 ]

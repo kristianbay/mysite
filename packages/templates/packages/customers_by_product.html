@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Product {{ product.shortname }}</h2>
+    <p>Total customers:&nbsp;{{ object_list|length }}</p>
+    <table>
+    	<tr><th>Customer ID</th><th>Customer Number</th></tr>
+        {% for customer in object_list %}
+            <tr>
+            	<td>{{ customer.inv_customer_id }}</td>
+            	<td>{{ customer.inv_customer_number }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

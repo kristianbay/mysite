@@ -52,6 +52,9 @@ class Product(models.Model):
     def __str__(self):
         return str(self.inv_product_id) + ' (' + str(self.shortname) + ' / ' + str(self.variant) + ')'
 
+    class Meta:
+        ordering = ["shortname"]
+        
 class ProductPackage(models.Model):
     product = models.ForeignKey(Product)
     package = models.ForeignKey(Package)

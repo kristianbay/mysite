@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Products</h2>
+    <table>
+    	<tr><th>Name</th><th>Variant</th><th>Obsolete</th><th>Customers</th></tr>
+        {% for product in object_list %}
+            <tr>
+            	<td>{{ product.shortname }}</td>
+            	<td>{{ product.variant }}</td>
+            	<td>{{ product.obsolete }}</td>
+            	<td><a href="/packages/customers/{{ product.inv_product_id }}">Show</td></td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
