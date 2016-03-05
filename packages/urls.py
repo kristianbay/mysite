@@ -10,4 +10,6 @@ urlpatterns = [
     url(r'^download_manual/(?P<package_version_id>[0-9]+)$', views.download_manual, name='download_manual'),
     url(r'^register/$', views.register),
     url(r'^register/success/$', views.register_success),
+    url(r'^api/1.0/packages/$', views.PackageView.as_view(), name='package-list'),
+    url(r'^api/1.0/packageversions/$', views.PackageVersionView.as_view(), name='package-version-list'),
 ]

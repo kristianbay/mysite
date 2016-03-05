@@ -12,6 +12,8 @@ from django.utils.encoding import smart_str
 from django.utils import html
 from django.utils import timezone
 
+from rest_framework import generics
+
 from .models import Package
 from .models import PackageVersion
 from .models import Customer
@@ -19,6 +21,9 @@ from .models import CustomerUser
 from .models import CustomerProduct
 from .models import Product
 from .models import ProductPackage
+
+from .serializers import PackageSerializer
+from .serializers import PackageVersionSerializer
 
 from .forms import *
 
@@ -104,3 +109,19 @@ def register(request):
  
 def register_success(request):
     return render_to_response('registration/success.html')
+
+class PackageView(generics.ListAPIView):
+    """
+    Returns a list of all packages.
+    """
+    model = Package
+    serializer_class = PackageSerializer
+    queryset = model.objects.all()
+    
+class PackageVersionView(generics.ListAPIView):
+    """
+    Returns a list of all package versions.
+    """
+    model = PackageVersion
+    serializer_class = PackageVersionSerializer
+    queryset = model.objects.all()
